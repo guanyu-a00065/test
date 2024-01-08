@@ -19,5 +19,4 @@ phases:
 
 artifacts:
   files:
-    - test/
-  name: test
+    - 'test/test'
