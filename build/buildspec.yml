@@ -12,6 +12,7 @@ phases:
       - echo Build started on `date`
       - echo Building the docker image...
       - docker build -t test:latest -f ./build/Dockerfile --no-cache . 
+      - docker save  test:latest > test.tar
       - ls -al 
     on-failure: ABORT
   post_build:
@@ -20,4 +21,4 @@ phases:
 
 artifacts:
   files: 
-    - "test/"
+    - "test/test.tar"
