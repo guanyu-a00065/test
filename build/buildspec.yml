@@ -7,17 +7,24 @@ phases:
   pre_build:
     commands:
       - echo Running pre-build steps...
+      - echo Logging in to Amazon ECR 
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+    on-failure: ABORT
   build:
     commands:
       - echo Build started on `date`
       - echo Building the docker image...
-      - docker build -t test:latest -f ./build/Dockerfile --no-cache . 
-      - docker save  test:latest > test.tar
-      - ls -al 
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f ./build/Dockerfile --no-cache . 
+      # - docker save  test:latest > test.tar
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
     on-failure: ABORT
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+    on-failure: ABORT
+  
 
 artifacts:
   files: 
