@@ -16,5 +16,5 @@ func main() {
 
 	})
 
-	server.Run("9512")
+	server.Run(":9512")
 }

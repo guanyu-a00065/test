@@ -10,5 +10,14 @@ RUN rm release/test_temp
 
 ## Put the binary to new image
 FROM alpine 
+RUN set -eux; \
+    apk update \
+    && apk upgrade \
+    && apk add --no-cache \
+    dumb-init 
 WORKDIR /app 
 COPY --from=builder /app/release /app/ 
+
+## Run the service
+
+ENTRYPOINT [ "dumb-init", "--", "/app/test" ]
