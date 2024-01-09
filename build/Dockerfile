@@ -21,3 +21,4 @@ COPY --from=builder /app/release /app/
 ## Run the service
 
 ENTRYPOINT [ "dumb-init", "--", "/app/test" ]
+EXPOSE 9512
